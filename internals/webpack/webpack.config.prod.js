@@ -5,6 +5,20 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const OfflinePlugin = require('@lcdp/offline-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const SentryPlugin = require('@sentry/webpack-plugin');
+
+const prodPlugins = [];
+if (process.env.ENVIRONMENT_NAME === 'production') {
+  prodPlugins.push(
+    new SentryPlugin({
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      include: '.',
+      ignore: ['node_modules', 'internals', 'build']
+    })
+  );
+}
 
 module.exports = require('./webpack.config.base')({
   mode: 'production',
@@ -124,7 +138,8 @@ module.exports = require('./webpack.config.base')({
           ios: true
         }
       ]
-    })
+    }),
+    ...prodPlugins
   ],
   devtool: 'source-map',
   performance: {

@@ -14,6 +14,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { PersistGate } from 'redux-persist/integration/react';
 import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
+import { initSentry } from '@services/sentry';
 
 // Import root app
 import App from 'containers/App';
@@ -66,6 +67,8 @@ if (module.hot) {
     render(translationMessages);
   });
 }
+
+initSentry();
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
